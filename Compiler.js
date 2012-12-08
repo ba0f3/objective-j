@@ -1,4 +1,4 @@
-var parser = require("./Parser.js");
+var Parser = require("./Parser.js");
 var NodeHandler = require("./NodeHandler.js");
 
 
@@ -12,7 +12,7 @@ module.exports.compile = function(source)
 	var errorLine = 0; 
 	var errorNode = null; 
 
-	var tree = parser.parse(source);	
+	var tree = Parser.parse(source);	
 	tree.traverse({
 		traversesTextNodes : false,
 		enteredNode : function(aNode)
@@ -31,20 +31,7 @@ module.exports.compile = function(source)
 				{
 					insideFunctionBody = true;
 				}break;
-				case "IvarDeclaration" :
-				{
-					if(current_Class)
-					{
-						if(typeof classIvars[current_Class] === "undefined")
-						{
-							classIvars[current_Class] = [];
-						}
-
-						var ivarName = aNode.innerText();
-						classIvars[current_Class].push(ivarName);
-					}
-
-				}break; 
+				 
 			}
 		},
 		exitedNode : function(aNode)
@@ -76,6 +63,17 @@ module.exports.compile = function(source)
 					{
 						value = children[0].value;
 					}break; 
+					case "AccessorsConfiguration" :
+					{
+						value = children[0].value; 
+
+					}break; 
+					case "Accessors" :
+					{ 	
+						 
+						value = children[2].value;
+
+					}break; 
 					case "AdditiveOperator" :
 					{
 						value = aNode.innerText();
@@ -87,7 +85,13 @@ module.exports.compile = function(source)
 					}break;
 					case "ClassDeclarationStatement":
 					{
-						 value = NodeHandler.handleClassDeclaration(aNode);
+						 var ivarInfo = classIvars[current_Class];
+						 if(typeof ivarInfo === "undefined")
+						 {
+						 	ivarInfo = null; 
+						 }
+
+						 value = NodeHandler.handleClassDeclaration(aNode, ivarInfo);
 						 current_Class = null; 
 
 					}break; 
@@ -125,6 +129,20 @@ module.exports.compile = function(source)
 						value = aNode.innerText(); 
 
 					}break;
+					case "ImportStatement" :
+					{
+						value = "objj_executeFile(\"" + children[2].value + "\")\n";
+
+					}break; 
+					case "IN" :
+					{
+						value = " in ";
+
+					}break;
+					case "INSTANCEOF" :
+					{
+						value = " instanceof ";
+					}break;
 					case "InstanceMethodDeclaration" :
 					{
 						
@@ -133,8 +151,25 @@ module.exports.compile = function(source)
 					}break; 
 					case "IvarDeclaration" :
 					{
-						 value = children[0].value; 
+						 value = NodeHandler.handleIvarDeclaration(aNode); 
+						 if(current_Class)
+						{
+							if(typeof classIvars[current_Class] === "undefined")
+							{
+								classIvars[current_Class] = [];
+							}
+
+							
+							classIvars[current_Class].push(value);
+						}
+
 					}break;
+					case "IvarPropertyName" :
+					{
+						 
+						value = {"property" : children[4].value};
+
+					}break; 
 					case "KeywordDeclarator" :
 					{
 						value = NodeHandler.handleKeywordDeclarator(aNode); 
@@ -153,6 +188,10 @@ module.exports.compile = function(source)
 					case "KeywordSelectorCall" :
 					{
 						value = NodeHandler.handleKeywordSelectorCall(aNode);
+					}break;
+					case "LocalFilePath" :
+					{
+						value = aNode.innerText().substring(1, aNode.innerText().length - 1);
 					}break;
 					case "MessageExpression" :
 					{
@@ -173,7 +212,7 @@ module.exports.compile = function(source)
 								var nIvars = ivarsInClass.length; 
 								for(var i = 0; i < nIvars; i++)
 								{
-									if(ivarsInClass[i] === value)
+									if(ivarsInClass[i].Identifier === value)
 									{
 										value = "self." + value; 
 										break; 
@@ -186,6 +225,16 @@ module.exports.compile = function(source)
 					case "Selector" :
 					{	
 						 value = children[0].value; 
+
+					}break; 
+					case "SelectorLiteral" :
+					{
+						value = "\"" + children[4].value + "\""; 
+					}break; 
+					case "StandardFilePath" :
+					{
+						 value = "Frameworks/" + aNode.innerText().substring(1, aNode.innerText().length - 1);
+						  
 
 					}break; 
 					case "start" : //start of code 
@@ -212,6 +261,10 @@ module.exports.compile = function(source)
 						value = children[2].value; 
 
 					}break; 
+					case "TYPEOF" :
+					{
+						value = "typeof ";
+					}break;
 					case "UnarySelector" :
 					{
 						value = children[0].value ;
