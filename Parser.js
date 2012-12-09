@@ -63,11 +63,7 @@ function parse(aCompiledGrammar, input, name)
             	
                 if (node.error)
                     console.log(node.message() + "\n");
-            },
-            exitedNode: function(node)
-            {
-
-            }
+            } 
         });
     }
 
@@ -153,7 +149,7 @@ function evaluate(context, parent, rules, rule_id)
             for (; index < count; ++index)
                 if (!evaluate(context, parent, rules, rule[index]))
                 {
-                	console.log(context)
+                	
                     memos[uid] = false;
                     return false;
                 }
