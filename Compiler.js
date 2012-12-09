@@ -1,6 +1,8 @@
 var Parser = require("./Parser.js");
 var NodeHandler = require("./NodeHandler.js");
 
+var IMPORTED_FILES = {};
+
 
 module.exports.compile = function(source)
 {
@@ -13,6 +15,7 @@ module.exports.compile = function(source)
 	var errorNode = null; 
 
 	var tree = Parser.parse(source);	
+	
 	tree.traverse({
 		traversesTextNodes : false,
 		enteredNode : function(aNode)
@@ -20,6 +23,7 @@ module.exports.compile = function(source)
 			var name = aNode.name,
 				children = aNode.children;
 
+			//console.log(name);
 			switch(name)
 			{
 				case "ClassDeclarationStatement" :
@@ -49,6 +53,11 @@ module.exports.compile = function(source)
 					case "%_" :
 					{
 						 errorNode = aNode; 
+					}break;
+					case "%LineTerminatorSequence" :
+					{ 
+						 errorLine++; 
+						 
 					}break;
 					case "%LineTerminator" :
 					{ 
@@ -131,7 +140,7 @@ module.exports.compile = function(source)
 					}break;
 					case "ImportStatement" :
 					{
-						value = "objj_executeFile(\"" + children[2].value + "\")\n";
+						IMPORTED_FILES[children[2].value] = null; 
 
 					}break; 
 					case "IN" :
@@ -291,6 +300,6 @@ module.exports.compile = function(source)
 		
 	});
 
-	return tree.value; 
+	return {"code" : tree.value, "importedFiles" : IMPORTED_FILES, "error" : {"node" : errorNode, "line" : (errorLine + 1)}}; 
 
 }

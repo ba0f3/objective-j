@@ -61,6 +61,8 @@ CPLog(@"Got some class: %@", inst);
 
     @todo document KVC usage.
 */
+
+
 @implementation CPObject
 {
     Class   isa;

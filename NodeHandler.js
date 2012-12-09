@@ -106,14 +106,14 @@ module.exports.handleClassDeclaration = function(aNode, ivarInfo)
 					{
 						value+="class_addMethods(the_class, [";
 						value+="new objj_method(sel_getUid(\"" + propertyName + "\"), function(self, _cmd)\n{ return self." + iVar.Identifier + "}),\n";
-						value+="new objj_method(sel_getUid(\"set" + capPropertyName + ":\"), function(self, _cmd, z)\n{ self." + iVar.Identifier + "=z})\n";
+						value+="new objj_method(sel_getUid(\"set" + capPropertyName + ":\"), function(self, _cmd, __z__)\n{ self." + iVar.Identifier + "=__z__;})\n";
 						startAddMethod = true; 
 					}
 					else
 					{
 
 						value+=", new objj_method(sel_getUid(\"" + propertyName + "\"), function(self, _cmd)\n{ return self." + iVar.Identifier + "})\n,";
-						value+="new objj_method(sel_getUid(\"set" + capPropertyName + ":\"), function(self, _cmd, z)\n{ self." + iVar.Identifier + "=z}\n)";
+						value+="new objj_method(sel_getUid(\"set" + capPropertyName + ":\"), function(self, _cmd, __z__)\n{ self." + iVar.Identifier + "=__z__;}\n)";
 
 					}
 					
@@ -234,13 +234,15 @@ module.exports.handleMessageExpression = function (aNode)
 {
 		var value = "", children = aNode.children; 
 		var target = children[2];
+
 		if(target.name === "SUPER")
 		{
-			value = "objj_msgSendSuper(";
+			value = "_$$("; //objj_msgSendSuper
 		}
 		else
 		{
-			value = "objj_msgSend(";
+			value = "_$("; //objj_msgSend
+				
 		}
 
 

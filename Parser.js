@@ -60,8 +60,13 @@ function parse(aCompiledGrammar, input, name)
             traverseTextNodes:false,
             enteredNode:function(node)
             {
+            	
                 if (node.error)
                     console.log(node.message() + "\n");
+            },
+            exitedNode: function(node)
+            {
+
             }
         });
     }
@@ -82,13 +87,18 @@ function context(input, table)
 
 function evaluate(context, parent, rules, rule_id)
 {
+
+
     var rule = rules[rule_id],
         type = rule[0],
         input_length = context.input.length,
         memos = context.memos[rule_id];
 
+
+
     var uid = context.position,
         entry = memos[uid];
+
 
     if (entry === false)
         return false;
@@ -107,6 +117,7 @@ function evaluate(context, parent, rules, rule_id)
         case NAME:
         case ERROR_NAME:
             var node = new SyntaxNode(rule[1], context.input, context.position, 0, rule[3]);
+
             if (!evaluate(context, node, rules, rule[2]))
             {
                 memos[uid] = false;
@@ -142,6 +153,7 @@ function evaluate(context, parent, rules, rule_id)
             for (; index < count; ++index)
                 if (!evaluate(context, parent, rules, rule[index]))
                 {
+                	console.log(context)
                     memos[uid] = false;
                     return false;
                 }
@@ -165,6 +177,7 @@ function evaluate(context, parent, rules, rule_id)
                 if (parent)
                     parent.children.length = child_count;
                 context.position = position;
+
             }
             memos[uid] = false;
             return false;
@@ -358,10 +371,8 @@ SyntaxNode.prototype.traverse = function(walker)
 
             else if (walker.traversesTextNodes)
             {
-				if(walker.enteredNode)
-				{
-                	walker.enteredNode(child);
-				}
+                walker.enteredNode(child);
+
                 if (walker.exitedNode)
                     walker.exitedNode(child);
             }

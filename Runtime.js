@@ -3,18 +3,21 @@
 
 CPLog = function(aString)
 {
-	console.log(aString);
+	if(typeof console != "undefined")
+		console.log(aString);
 
 };
 
 CPLog.error = function(aString)
 {
-	console.error(aString);
+	if(typeof console != "undefined")
+			console.error(aString);
 };
 
 CPLog.warn = function(aString)
 {
-	console.warn(aString);
+	if(typeof console != "undefined")
+		console.warn(aString);
 };
 
 
@@ -227,7 +230,7 @@ objj_msgSend = function( aReceiver, aSelector)
    
     var method = isa.method_dtable[aSelector]; 
    	 
-	if(!method){console.error(isa.name + " does not implement selector '" + aSelector + "'"); return;}
+	if(!method){CPLog.error(isa.name + " does not implement selector '" + aSelector + "'"); return;}
 
     if(method)
     {
@@ -252,18 +255,16 @@ objj_msgSendSuper = function( aSuper, aSelector)
      
     var method = super_class.method_dtable[aSelector];
 
-    if(!method){console.error(super_class.name + " does not implement selector '" + aSelector + "'"); return;}
+    if(!method){CPLog.error(super_class.name + " does not implement selector '" + aSelector + "'"); return;}
     
     if(method)
     {
     	var implementation =  method.method_imp ;
-
     	return implementation.apply(aSuper.receiver, arguments);
     }
-
-
-    	
 };
+
+
 
 class_getMethodImplementation = function( aClass, aSelector)
 {
@@ -276,7 +277,7 @@ class_getMethodImplementation = function( aClass, aSelector)
 	}
 	else
 	{
-		console.log(aClass.name + " does not implement selector '" + aSelector + "'")
+		CPLog.error(aClass.name + " does not implement selector '" + aSelector + "'")
 	}
 
 	return null; 
@@ -293,6 +294,9 @@ sel_getUid = function( aName)
     return aName;
 };
 
+
+_$ = objj_msgSend; 
+_$$ = objj_msgSendSuper; 
 
 
 
