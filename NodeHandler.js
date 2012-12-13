@@ -16,8 +16,8 @@ getChildNodeWithName = function(aNode, aName)
 module.exports.concatChildValues = function(aNode)
 {
 	var value = "", children = aNode.children; 
-	 
-	for(var i = 0; i < children.length; i++)
+	var len = children.length; 
+	for(var i = 0; i < len; i++)
 	{
 	    if(typeof children[i] === "string")
 		{
