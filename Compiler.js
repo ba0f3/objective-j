@@ -46,24 +46,6 @@ module.exports.compile = function(source)
 			
 				switch(name)
 				{
-					case "_":
-					{
-						value = ""; 
-					}break;
-					case "%_" :
-					{
-						 errorNode = aNode; 
-					}break;
-					case "%LineTerminatorSequence" :
-					{ 
-						 errorLine++; 
-						 
-					}break;
-					case "%LineTerminator" :
-					{ 
-						 errorLine++; 
-						 
-					}break;
 					case "%start" :
 					{
 						value = children[1].value;	
@@ -122,10 +104,6 @@ module.exports.compile = function(source)
 					{
 						value = ";\n";
 					}break; 
-					case "FUNCTION" :
-					{
-						value = "function ";
-					}break;
 					case "FunctionBody" :
 					{
 						value = NodeHandler.concatChildValues(aNode);
@@ -143,15 +121,6 @@ module.exports.compile = function(source)
 						IMPORTED_FILES[children[2].value] = null; 
 
 					}break; 
-					case "IN" :
-					{
-						value = " in ";
-
-					}break;
-					case "INSTANCEOF" :
-					{
-						value = " instanceof ";
-					}break;
 					case "InstanceMethodDeclaration" :
 					{
 						
@@ -197,6 +166,10 @@ module.exports.compile = function(source)
 					case "KeywordSelectorCall" :
 					{
 						value = NodeHandler.handleKeywordSelectorCall(aNode);
+					}break;
+					case "LineTerminator" :
+					{
+						value = "\n";
 					}break;
 					case "LocalFilePath" :
 					{
@@ -270,17 +243,9 @@ module.exports.compile = function(source)
 						value = children[2].value; 
 
 					}break; 
-					case "TYPEOF" :
-					{
-						value = "typeof ";
-					}break;
 					case "UnarySelector" :
 					{
 						value = children[0].value ;
-					}break;
-					case "VAR" :
-					{
-						value = "var ";
 					}break; 
 					case "WhiteSpace" :
 					{
@@ -300,6 +265,6 @@ module.exports.compile = function(source)
 		
 	});
 
-	return {"code" : tree.value, "importedFiles" : IMPORTED_FILES, "error" : {"node" : errorNode, "line" : (errorLine + 1)}}; 
+	return tree.value;  
 
 }

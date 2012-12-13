@@ -237,11 +237,11 @@ module.exports.handleMessageExpression = function (aNode)
 
 		if(target.name === "SUPER")
 		{
-			value = "_$$("; //objj_msgSendSuper
+			value = "objj_msgSendSuper("; //objj_msgSendSuper
 		}
 		else
 		{
-			value = "_$("; //objj_msgSend
+			value = "objj_msgSend("; //objj_msgSend
 				
 		}
 

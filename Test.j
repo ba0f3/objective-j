@@ -8,12 +8,12 @@
 } 
 
     
--(id) initWithName:(CPString)aName age:(int)age
+-(id) initWithName:(CPString)aName age:(int)anAge
 {
 	self = [super init];
 	if(self)
 	{
-		[self setAge:age];
+		[self setAge:anAge];
 		[self setName:aName];
 	}
 
@@ -57,7 +57,7 @@
  
  +(void) initialize
  {
- 	console.log("called dog initialize");
+ 	CPLog("called dog initialize");
  }
 
 -(void) speak

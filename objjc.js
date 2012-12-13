@@ -8,10 +8,4 @@ var source = FILE.readFileSync(fileName, "UTF-8");
  
 var value = Compiler.compile(source);
 
-
-if(value.error.node)
-{
-	console.log("error starting on line " + value.error.line);
-}
-else
-	console.log(value.code);
+console.log(value);

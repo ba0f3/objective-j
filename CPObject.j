@@ -361,7 +361,7 @@ CPLog(@"Got some class: %@", inst);
 */
 - (void)doesNotRecognizeSelector:(SEL)aSelector
 {
-     console.error(isa.name + "does not recognize selector " + aSelector);
+     CPLog.error(isa.name + "does not recognize selector " + aSelector);
 }
 
  
