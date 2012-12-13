@@ -1,0 +1,6 @@
+Node.js is required. To compile an Objective-J file (.j), from a 
+bash shell run
+
+node objjc.js filename > outputFile.js
+
+The compiled javascript will be in outputFile.js
