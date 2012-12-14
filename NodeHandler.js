@@ -43,7 +43,8 @@ module.exports.handleClassDeclaration = function(aNode, ivarInfo)
 	if(getChildNodeWithName(aNode, "CategoryDeclaration")) //a category
 	{
 		value = "{var the_class = objj_getClass(\"" + children[2].value + "\");\n" 
-			+ "if(!the_class) throw new SyntaxError(\"*** Could not find definition for class \\\"CPArray\\\"\");\n"
+			+ "if(!the_class) throw new SyntaxError(\"*** Could not find definition for class \\\"" +
+				children[2].value + "\\\"\");\n"
 			+ "var meta_class = the_class.isa; ";
 
 		var classBody = getChildNodeWithName(aNode, "ClassBody");
