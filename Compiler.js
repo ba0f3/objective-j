@@ -53,7 +53,11 @@ module.exports.compile = function(source)
 					case "#document" :
 					{
 						value = children[0].value;
-					}break; 
+					}break;
+					case "_" :
+					{
+						value = aNode.innerText(); 
+					}break;
 					case "AccessorsConfiguration" :
 					{
 						value = children[0].value; 
@@ -166,11 +170,7 @@ module.exports.compile = function(source)
 					case "KeywordSelectorCall" :
 					{
 						value = NodeHandler.handleKeywordSelectorCall(aNode);
-					}break;
-					case "LineTerminator" :
-					{
-						value = "\n";
-					}break;
+					}break; 
 					case "LocalFilePath" :
 					{
 						value = aNode.innerText().substring(1, aNode.innerText().length - 1);
@@ -247,10 +247,6 @@ module.exports.compile = function(source)
 					{
 						value = children[0].value ;
 					}break; 
-					case "WhiteSpace" :
-					{
-						value = " ";
-					}break;
 					default : 
 					{	
 						 value = NodeHandler.concatChildValues(aNode);
